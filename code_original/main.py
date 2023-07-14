@@ -214,10 +214,10 @@ except:
         pass
 game = True
 tour = 0
-end_tour = 0.7
+end_tour = 0.6
 kright=True
 kleft=True
-kdown=True
+kdown=False
 kup=True
 tour_total=1
 play_time=1
@@ -233,12 +233,9 @@ while game:
                 if event.key == pygame.K_LEFT and kleft:
                     active_shape, area = move_shape(area,active_shape,active_color,1)
                     kleft=False
-                if event.key == pygame.K_DOWN and kdown:
-                    kdown=False
+                if event.key == pygame.K_DOWN:
                     down_tour=0
-                    active_shape, active_color, old_active_shape, area, score = go_down(area,active_shape,active_color,score)
-                    area = print_shape(area,old_active_shape,0)
-                    area = print_shape(area,active_shape,active_color)
+                    kdown=True
                 if event.key == pygame.K_UP and kup:
                     kup=False
                     area, active_shape = rotate_shape(area, active_shape, active_color)
@@ -248,7 +245,7 @@ while game:
                 if event.key == pygame.K_LEFT:
                     kleft=True
                 if event.key == pygame.K_DOWN:
-                    kdown=True
+                    kdown=False
                 if event.key == pygame.K_UP:
                     kup=True
         except:
@@ -294,14 +291,15 @@ while game:
     tour_total+=1
     if tour_total%25==0:
         play_time+=1
-    if play_time%20==0 and end_tour>0.5 : #Toutes les 30s
+    if play_time%20==0 and end_tour>0.2 : #Toutes les 30s
         print("SPEED UP"," "*10)
-        end_tour-=0.25
+        end_tour-=0.05
         play_time+=1
     print("Score :",score,end='\r')
 
-    if down_tour>int(FPS/4):
-        kdown=True
-        down_tour=0
+    if kdown and int(down_tour%int(FPS/6))==0:
+        active_shape, active_color, old_active_shape, area, score = go_down(area,active_shape,active_color,score)
+        area = print_shape(area,old_active_shape,0)
+        area = print_shape(area,active_shape,active_color)
     down_tour+=1
     
